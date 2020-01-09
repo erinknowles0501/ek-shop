@@ -93,6 +93,85 @@ module.exports =
 /************************************************************************/
 /******/ ({
 
+/***/ "./components/ResourceList.js":
+/*!************************************!*\
+  !*** ./components/ResourceList.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var graphql_tag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! graphql-tag */ "graphql-tag");
+/* harmony import */ var graphql_tag__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(graphql_tag__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_apollo__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-apollo */ "react-apollo");
+/* harmony import */ var react_apollo__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_apollo__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _shopify_polaris__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shopify/polaris */ "@shopify/polaris");
+/* harmony import */ var _shopify_polaris__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_shopify_polaris__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var store_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! store-js */ "store-js");
+/* harmony import */ var store_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(store_js__WEBPACK_IMPORTED_MODULE_4__);
+
+var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
+
+
+
+const GET_PRODUCTS_BY_ID = graphql_tag__WEBPACK_IMPORTED_MODULE_1___default.a`
+  query getProducts($ids: [ID!]!) {
+    nodes(ids: $ids) {
+      ... on Product {
+        title
+        handle
+        descriptionHtml
+        id
+        images(first: 1) {
+          edges {
+            node {
+              originalSrc
+              altText
+            }
+          }
+        }
+        variants(first: 1) {
+          edges {
+            node {
+              price
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+class ResourceListWithProducts extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  render() {
+    return __jsx(react_apollo__WEBPACK_IMPORTED_MODULE_2__["Query"], {
+      query: GET_PRODUCTS_BY_ID,
+      variables: {
+        ids: store_js__WEBPACK_IMPORTED_MODULE_4___default.a.get('ids')
+      }
+    }, ({
+      data,
+      loading,
+      error
+    }) => {
+      if (loading) return __jsx("div", null, "Loading\u2026");
+      if (error) return __jsx("div", null, error.message);
+      console.log(data);
+      return __jsx(_shopify_polaris__WEBPACK_IMPORTED_MODULE_3__["Card"], null, __jsx("p", null, "stuff here"));
+    });
+  }
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (ResourceListWithProducts);
+
+/***/ }),
+
 /***/ "./node_modules/@babel/runtime-corejs2/core-js/object/define-property.js":
 /*!*******************************************************************************!*\
   !*** ./node_modules/@babel/runtime-corejs2/core-js/object/define-property.js ***!
@@ -150,9 +229,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _shopify_polaris__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_shopify_polaris__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _shopify_app_bridge_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shopify/app-bridge-react */ "@shopify/app-bridge-react");
 /* harmony import */ var _shopify_app_bridge_react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_shopify_app_bridge_react__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var store_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! store-js */ "store-js");
+/* harmony import */ var store_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(store_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _components_ResourceList__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/ResourceList */ "./components/ResourceList.js");
 
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement;
+
+
 
 
 const img = 'https://cdn.shopify.com/s/files/1/0757/9955/files/empty-state.svg';
@@ -166,17 +250,21 @@ class Index extends react__WEBPACK_IMPORTED_MODULE_1___default.a.Component {
     });
 
     Object(_babel_runtime_corejs2_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_0__["default"])(this, "handleSelection", resources => {
+      const idsFromResources = resources.selection.map(product => product.id);
       this.setState({
         open: false
       });
-      console.log(resources);
+      store_js__WEBPACK_IMPORTED_MODULE_4___default.a.set('ids', idsFromResources);
     });
   }
 
   render() {
     return __jsx(_shopify_polaris__WEBPACK_IMPORTED_MODULE_2__["Page"], null, __jsx(_shopify_app_bridge_react__WEBPACK_IMPORTED_MODULE_3__["TitleBar"], {
       primaryAction: {
-        content: 'Select products'
+        content: 'Select products',
+        onAction: () => this.setState({
+          open: true
+        })
       }
     }), __jsx(_shopify_app_bridge_react__WEBPACK_IMPORTED_MODULE_3__["ResourcePicker"], {
       resourceType: "Product",
@@ -197,7 +285,7 @@ class Index extends react__WEBPACK_IMPORTED_MODULE_1___default.a.Component {
       image: img
     }, __jsx("p", null, "Select products to change their price temporarily."), __jsx("a", {
       href: "https://ek-artstore.myshopify.com/admin/apps/ek-shop/annotated-layout"
-    }, "HHHH"))));
+    }, "HHHH"))), __jsx(_components_ResourceList__WEBPACK_IMPORTED_MODULE_5__["default"], null));
   }
 
 }
@@ -251,6 +339,17 @@ module.exports = require("core-js/library/fn/object/define-property");
 
 /***/ }),
 
+/***/ "graphql-tag":
+/*!******************************!*\
+  !*** external "graphql-tag" ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("graphql-tag");
+
+/***/ }),
+
 /***/ "react":
 /*!************************!*\
   !*** external "react" ***!
@@ -259,6 +358,28 @@ module.exports = require("core-js/library/fn/object/define-property");
 /***/ (function(module, exports) {
 
 module.exports = require("react");
+
+/***/ }),
+
+/***/ "react-apollo":
+/*!*******************************!*\
+  !*** external "react-apollo" ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("react-apollo");
+
+/***/ }),
+
+/***/ "store-js":
+/*!***************************!*\
+  !*** external "store-js" ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("store-js");
 
 /***/ })
 

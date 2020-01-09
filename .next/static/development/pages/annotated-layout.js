@@ -45606,7 +45606,7 @@ function (_React$Component) {
 
 /***/ }),
 
-/***/ 1:
+/***/ 3:
 /*!*****************************************************************************************************************************************************************!*\
   !*** multi next-client-pages-loader?page=%2Fannotated-layout&absolutePagePath=C%3A%5CUsers%5CPy%5CDesktop%5C00_working%5Cek-shop%5Cpages%5Cannotated-layout.js ***!
   \*****************************************************************************************************************************************************************/
@@ -45629,5 +45629,5 @@ module.exports = dll_ef0ff7c60362f24a921f;
 
 /***/ })
 
-},[[1,"static/runtime/webpack.js"]]]);
+},[[3,"static/runtime/webpack.js"]]]);
 //# sourceMappingURL=annotated-layout.js.map
